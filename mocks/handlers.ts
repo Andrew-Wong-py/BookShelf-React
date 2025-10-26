@@ -64,14 +64,17 @@ export const handlers = [
       const updates = await request.json()
       await sleep(300)
 
+      // 1. 在内存数组中找到要更新的书籍
       const bookIndex = books.findIndex((b) => b.id === id)
 
       if (bookIndex === -1) {
         return HttpResponse.json({ error: 'Book not found' }, { status: 404 })
       }
 
+      // 2. 更新内存中的数据
       books[bookIndex] = { ...books[bookIndex], ...(updates as Partial<Book>) }
 
+      // 3. 返回更新后的书籍（模拟后端响应）
       return HttpResponse.json(books[bookIndex])
     },
   ),

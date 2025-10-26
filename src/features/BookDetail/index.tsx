@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router'
 
 import Layout from '../../components/Layout'
 import Spinner from '../../components/Spinner'
-import { useGetBookQuery } from '../../services/books'
+import { useGetBookQuery } from '../../services/booksSlice'
 
 const BookDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()

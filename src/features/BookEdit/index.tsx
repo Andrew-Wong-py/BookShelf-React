@@ -3,7 +3,12 @@ import { Link, useNavigate, useParams } from 'react-router'
 
 import Layout from '../../components/Layout'
 import Spinner from '../../components/Spinner'
-import { useGetBookQuery, useUpdateBookMutation } from '../../services/books'
+import {
+  useGetBookContentQuery,
+  useGetBookQuery,
+  useUpdateBookContentMutation,
+  useUpdateBookMutation,
+} from '../../services/booksSlice'
 import type { Book } from '../../services/types'
 
 const BookEdit: React.FC = () => {
@@ -11,6 +16,10 @@ const BookEdit: React.FC = () => {
   const navigate = useNavigate()
   const { data: book, isLoading } = useGetBookQuery(id || '')
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation()
+
+  // Get book content using RTK Query
+  const { data: bookContent = '' } = useGetBookContentQuery(id || '')
+  const [updateBookContent] = useUpdateBookContentMutation()
 
   const [formData, setFormData] = useState<Partial<Book>>({
     title: '',
@@ -23,6 +32,7 @@ const BookEdit: React.FC = () => {
   })
 
   const [categoryInput, setCategoryInput] = useState('')
+  const [contentInput, setContentInput] = useState(bookContent)
 
   useEffect(() => {
     if (book) {
@@ -37,6 +47,11 @@ const BookEdit: React.FC = () => {
       })
     }
   }, [book])
+
+  // Update content input when bookContent changes
+  useEffect(() => {
+    setContentInput(bookContent)
+  }, [bookContent])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -73,6 +88,9 @@ const BookEdit: React.FC = () => {
     if (!id) return
 
     try {
+      // Update book content using RTK Query mutation (in-memory only)
+      await updateBookContent({ bookId: id, content: contentInput })
+
       await updateBook({ id, updates: formData }).unwrap()
       navigate(`/books/${id}`)
     } catch (error) {
@@ -280,7 +298,7 @@ const BookEdit: React.FC = () => {
             </div>
 
             {/* Summary */}
-            <div className="mb-6">
+            <div className="mb-4">
               <label
                 htmlFor="summary"
                 className="mb-1 block text-sm font-medium text-gray-700"
@@ -294,6 +312,24 @@ const BookEdit: React.FC = () => {
                 onChange={handleInputChange}
                 rows={4}
                 className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+
+            {/* Book Content */}
+            <div className="mb-6">
+              <label
+                htmlFor="content"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
+                Reading Content
+              </label>
+              <textarea
+                id="content"
+                value={contentInput}
+                onChange={(e) => setContentInput(e.target.value)}
+                rows={10}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Enter book reading content..."
               />
             </div>
 

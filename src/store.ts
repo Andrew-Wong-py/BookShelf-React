@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { combineReducers } from 'redux'
 
-import { booksApi } from './services/books'
+import { booksApi } from './services/booksSlice'
 
 export const store = configureStore({
   devTools: process.env.NODE_ENV === 'development',

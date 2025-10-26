@@ -1,14 +1,42 @@
-import React from 'react'
+import Pagination from '@mui/material/Pagination'
+import React, { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
 
-import bookContent from '../../../take-home-assessment/book_content.txt?raw'
 import Layout from '../../components/Layout'
 import Spinner from '../../components/Spinner'
-import { useGetBookQuery } from '../../services/books'
+import {
+  useGetBookContentQuery,
+  useGetBookQuery,
+} from '../../services/booksSlice'
+
+const WORDS_PER_PAGE = 300 // 每页显示的单词数
 
 const BookRead: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { data: book, isLoading } = useGetBookQuery(id || '')
+  const [currentPage, setCurrentPage] = useState(1)
+
+  // Get book content using RTK Query
+  const { data: bookContent = '' } = useGetBookContentQuery(id || '')
+
+  // 计算总页数和当前页内容
+  const { totalPages, currentContent } = useMemo(() => {
+    // 将文本按单词分割（包括空格、标点等）
+    const words = bookContent.trim().split(/\s+/)
+    const total = Math.ceil(words.length / WORDS_PER_PAGE)
+    const start = (currentPage - 1) * WORDS_PER_PAGE
+    const end = start + WORDS_PER_PAGE
+    const pageWords = words.slice(start, end)
+    const content = pageWords.join(' ')
+    return { totalPages: total, currentContent: content }
+  }, [currentPage, bookContent])
+
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setCurrentPage(value)
+  }
 
   if (isLoading) {
     return (
@@ -41,18 +69,27 @@ const BookRead: React.FC = () => {
   return (
     <Layout>
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="mb-6 text-sm">
-          <Link to="/books" className="text-blue-600 hover:underline">
-            Books
+        {/* Navigation */}
+        <div className="mb-6 flex items-center justify-between">
+          {/* Breadcrumb */}
+          <nav className="flex items-center text-sm">
+            <Link to="/books" className="text-blue-600 hover:underline">
+              Books
+            </Link>
+            <span className="mx-2 text-gray-400">/</span>
+            <Link to={`/books/${id}`} className="text-blue-600 hover:underline">
+              {book.title}
+            </Link>
+            <span className="mx-2 text-gray-400">/</span>
+            <span className="text-gray-600">Read</span>
+          </nav>
+          <Link
+            to={`/books/${id}`}
+            className="rounded-lg border border-gray-300 bg-white px-6 py-3 text-gray-700 hover:bg-gray-50"
+          >
+            ← Back to Details
           </Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <Link to={`/books/${id}`} className="text-blue-600 hover:underline">
-            {book.title}
-          </Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <span className="text-gray-600">Read</span>
-        </nav>
+        </div>
 
         {/* Reading Header */}
         <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
@@ -66,19 +103,25 @@ const BookRead: React.FC = () => {
         <div className="rounded-lg bg-white p-8 shadow-md">
           <div className="prose prose-gray max-w-none">
             <p className="leading-relaxed whitespace-pre-wrap text-gray-700">
-              {bookContent}
+              {currentContent}
             </p>
           </div>
-        </div>
 
-        {/* Navigation */}
-        <div className="mt-6 flex gap-4">
-          <Link
-            to={`/books/${id}`}
-            className="rounded-lg border border-gray-300 bg-white px-6 py-3 text-gray-700 hover:bg-gray-50"
-          >
-            ← Back to Details
-          </Link>
+          {/* Pagination Controls */}
+          <div className="mt-8 flex flex-col items-center gap-4 border-t pt-6">
+            <span className="text-sm text-gray-600">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              size="large"
+              showFirstButton
+              showLastButton
+            />
+          </div>
         </div>
       </div>
     </Layout>

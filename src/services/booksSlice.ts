@@ -1,11 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import bookContentRaw from '../../take-home-assessment/book_content.txt?raw'
+
 import type { Book, BooksResponse, BooksQueryParams } from './types'
 
 export const booksApi = createApi({
   reducerPath: 'booksApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
-  tagTypes: ['Book'], // 定义标签类型（用于缓存失效）
+  tagTypes: ['Book', 'BookContent'], // 定义标签类型（用于缓存失效）
   endpoints: (builder) => ({
     getBooks: builder.query<BooksResponse, BooksQueryParams>({
       query: ({ page = 1, limit = 24, query = '' }) => ({
@@ -42,6 +44,46 @@ export const booksApi = createApi({
     getCategories: builder.query<string[], void>({
       query: () => '/categories',
     }),
+    // Book Content endpoints (in-memory only, no actual API calls)
+    getBookContent: builder.query<string, string>({
+      queryFn: (bookId, { getState }) => {
+        // Return from cache or default content
+        const state = getState() as any
+        const cachedContent =
+          state.booksApi?.queries?.[`getBookContent("${bookId}")`]?.data
+        return { data: cachedContent || bookContentRaw }
+      },
+      providesTags: (result, error, bookId) => [
+        { type: 'BookContent', id: bookId },
+      ],
+    }),
+    updateBookContent: builder.mutation<
+      string,
+      { bookId: string; content: string }
+    >({
+      queryFn: ({ content }) => {
+        // Simulate successful update (in-memory only)
+        return { data: content }
+      },
+      // Update the cache optimistically
+      async onQueryStarted({ bookId, content }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          booksApi.util.updateQueryData(
+            'getBookContent',
+            bookId,
+            () => content,
+          ),
+        )
+        try {
+          await queryFulfilled
+        } catch {
+          patchResult.undo()
+        }
+      },
+      invalidatesTags: (result, error, { bookId }) => [
+        { type: 'BookContent', id: bookId },
+      ],
+    }),
   }),
 })
 
@@ -50,4 +92,6 @@ export const {
   useGetBookQuery,
   useUpdateBookMutation,
   useGetCategoriesQuery,
+  useGetBookContentQuery,
+  useUpdateBookContentMutation,
 } = booksApi

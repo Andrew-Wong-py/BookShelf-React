@@ -59,6 +59,7 @@ pnpm install
 ```
 
 ### 初始化MSW
+
 ```bash
 npx msw init public/ --save
 ```
@@ -160,6 +161,3 @@ type Book = {
 
 - `take-home-assessment/books.json`: 包含 2000 条书籍记录
 - `take-home-assessment/book_content.txt`: 静态阅读内容
-
-
-

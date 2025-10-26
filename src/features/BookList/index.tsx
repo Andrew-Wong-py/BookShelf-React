@@ -1,16 +1,18 @@
-import React, { useMemo, useState } from 'react'
+import Pagination from '@mui/material/Pagination'
+import React, { useMemo, useRef, useState } from 'react'
 
 import BookCard from '../../components/BookCard'
 import Layout from '../../components/Layout'
 import SearchInput from '../../components/SearchInput'
 import Spinner from '../../components/Spinner'
-import { useGetBooksQuery } from '../../services/books'
+import { useGetBooksQuery } from '../../services/booksSlice'
 
 const ITEMS_PER_PAGE = 24
 
 const BookList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [page, setPage] = useState(1)
+  const listRef = useRef<HTMLDivElement>(null)
 
   const { data, isLoading, isFetching, error } = useGetBooksQuery({
     page,
@@ -18,33 +20,53 @@ const BookList: React.FC = () => {
     query: searchQuery,
   })
 
+  // 计算总页数
   const totalPages = useMemo(() => {
     if (!data) return 0
     return Math.ceil(data.total / ITEMS_PER_PAGE)
   }, [data])
+
+  const hasNextPage = page < totalPages
+
+  // 仅预取下一页数据，不自动翻页
+  useGetBooksQuery(
+    {
+      page: page + 1,
+      limit: ITEMS_PER_PAGE,
+      query: searchQuery,
+    },
+    {
+      skip: !hasNextPage, // Skip if no next page
+      // 只预取，不触发 setPage
+      // RTK Query 会自动缓存
+    },
+  )
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value)
     setPage(1) // Reset to first page on search
   }
 
-  const handlePrevPage = () => {
-    setPage((prev) => Math.max(1, prev - 1))
-  }
-
-  const handleNextPage = () => {
-    setPage((prev) => Math.min(totalPages, prev + 1))
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setPage(value)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (
     <Layout>
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div
+        ref={listRef}
+        className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
+      >
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 flex">
           <h1 className="mb-4 text-3xl font-bold text-gray-900">
             Book Catalog
           </h1>
-          <div className="max-w-md">
+          <div className="ml-auto w-240">
             <SearchInput
               value={searchQuery}
               onChange={handleSearchChange}
@@ -87,9 +109,9 @@ const BookList: React.FC = () => {
                   No books found. {searchQuery && 'Try adjusting your search.'}
                 </div>
               ) : (
-                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                <div className="flex flex-col gap-3">
                   {data.books.map((book) => (
-                    <BookCard key={book.id} book={book} />
+                    <BookCard key={book.id} book={book} variant="list" />
                   ))}
                 </div>
               )}
@@ -97,24 +119,16 @@ const BookList: React.FC = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex items-center justify-center gap-4">
-                <button
-                  onClick={handlePrevPage}
-                  disabled={page === 1}
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <span className="text-sm text-gray-700">
-                  Page {page} of {totalPages}
-                </span>
-                <button
-                  onClick={handleNextPage}
-                  disabled={page === totalPages}
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Next
-                </button>
+              <div className="mt-8 flex justify-center">
+                <Pagination
+                  count={totalPages}
+                  page={page}
+                  onChange={handlePageChange}
+                  color="primary"
+                  size="large"
+                  showFirstButton
+                  showLastButton
+                />
               </div>
             )}
           </>
