@@ -1,3 +1,7 @@
+import HomeIcon from '@mui/icons-material/Home'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Typography from '@mui/material/Typography'
 import React from 'react'
 import { Link, useParams } from 'react-router'
 
@@ -41,13 +45,19 @@ const BookDetail: React.FC = () => {
     <Layout>
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="mb-6 text-sm">
-          <Link to="/books" className="text-blue-600 hover:underline">
+        <Breadcrumbs aria-label="breadcrumb" className="mb-6">
+          <Link
+            to="/books"
+            className="flex items-center gap-1 text-blue-600 hover:underline"
+          >
+            <HomeIcon fontSize="small" />
             Books
           </Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <span className="text-gray-600">{book.title}</span>
-        </nav>
+          <Typography color="text.primary" className="flex items-center gap-1">
+            <MenuBookIcon fontSize="small" />
+            {book.title}
+          </Typography>
+        </Breadcrumbs>
 
         {/* Book Details Card */}
         <div className="rounded-lg bg-white p-8 shadow-md">

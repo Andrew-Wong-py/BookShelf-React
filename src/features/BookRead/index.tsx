@@ -1,4 +1,9 @@
+import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode'
+import HomeIcon from '@mui/icons-material/Home'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Pagination from '@mui/material/Pagination'
+import Typography from '@mui/material/Typography'
 import React, { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
 
@@ -72,17 +77,29 @@ const BookRead: React.FC = () => {
         {/* Navigation */}
         <div className="mb-6 flex items-center justify-between">
           {/* Breadcrumb */}
-          <nav className="flex items-center text-sm">
-            <Link to="/books" className="text-blue-600 hover:underline">
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link
+              to="/books"
+              className="flex items-center gap-1 text-blue-600 hover:underline"
+            >
+              <HomeIcon fontSize="small" />
               Books
             </Link>
-            <span className="mx-2 text-gray-400">/</span>
-            <Link to={`/books/${id}`} className="text-blue-600 hover:underline">
+            <Link
+              to={`/books/${id}`}
+              className="flex items-center gap-1 text-blue-600 hover:underline"
+            >
+              <MenuBookIcon fontSize="small" />
               {book.title}
             </Link>
-            <span className="mx-2 text-gray-400">/</span>
-            <span className="text-gray-600">Read</span>
-          </nav>
+            <Typography
+              color="text.primary"
+              className="flex items-center gap-1"
+            >
+              <ChromeReaderModeIcon fontSize="small" />
+              Read
+            </Typography>
+          </Breadcrumbs>
           <Link
             to={`/books/${id}`}
             className="rounded-lg border border-gray-300 bg-white px-6 py-3 text-gray-700 hover:bg-gray-50"

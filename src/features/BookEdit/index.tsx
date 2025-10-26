@@ -1,3 +1,8 @@
+import EditIcon from '@mui/icons-material/Edit'
+import HomeIcon from '@mui/icons-material/Home'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Typography from '@mui/material/Typography'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 
@@ -130,17 +135,26 @@ const BookEdit: React.FC = () => {
     <Layout>
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="mb-6 text-sm">
-          <Link to="/books" className="text-blue-600 hover:underline">
+        <Breadcrumbs aria-label="breadcrumb" className="mb-6">
+          <Link
+            to="/books"
+            className="flex items-center gap-1 text-blue-600 hover:underline"
+          >
+            <HomeIcon fontSize="small" />
             Books
           </Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <Link to={`/books/${id}`} className="text-blue-600 hover:underline">
+          <Link
+            to={`/books/${id}`}
+            className="flex items-center gap-1 text-blue-600 hover:underline"
+          >
+            <MenuBookIcon fontSize="small" />
             {book.title}
           </Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <span className="text-gray-600">Edit</span>
-        </nav>
+          <Typography color="text.primary" className="flex items-center gap-1">
+            <EditIcon fontSize="small" />
+            Edit
+          </Typography>
+        </Breadcrumbs>
 
         {/* Edit Form */}
         <div className="rounded-lg bg-white p-8 shadow-md">
