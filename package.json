@@ -31,7 +31,7 @@
     "@mui/icons-material": "^7.3.8",
     "@mui/material": "^7.3.8",
     "@reduxjs/toolkit": "2.11.2",
-    "@tanstack/react-virtual": "^3.13.18",
+    "@tanstack/react-virtual": "^3.13.19",
     "clsx": "^2.1.1",
     "ky": "^1.14.3",
     "react": "^18.2.0",
