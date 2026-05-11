@@ -72,7 +72,7 @@
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "lint-staged": "^17.0.4",
-    "msw": "^2.14.5",
+    "msw": "^2.14.6",
     "node-fetch": "^3.3.2",
     "postcss": "^8.5.14",
     "postcss-nesting": "^14.0.0",
