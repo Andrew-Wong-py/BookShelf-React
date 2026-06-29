@@ -74,7 +74,7 @@
     "lint-staged": "^17.0.8",
     "msw": "^2.14.6",
     "node-fetch": "^3.3.2",
-    "postcss": "^8.5.15",
+    "postcss": "^8.5.16",
     "postcss-nesting": "^14.0.0",
     "prettier": "^3.8.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
