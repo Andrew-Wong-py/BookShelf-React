@@ -24,8 +24,8 @@ importers:
         specifier: 2.12.0
         version: 2.12.0(react-redux@9.3.0(@types/react@18.3.23)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
       '@tanstack/react-virtual':
-        specifier: ^3.14.6
-        version: 3.14.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^3.14.7
+        version: 3.14.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1212,14 +1212,14 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || >=4.0.0 || insiders'
 
-  '@tanstack/react-virtual@3.14.6':
-    resolution: {integrity: sha512-4+Uq8m0/gzO4kMCHUEpTtGX1RnONK0C+g88b2ltwPMWUBiaVarBuWKoPJaz7gj1cKCVRAdyu+U8GcKhwCc2beA==}
+  '@tanstack/react-virtual@3.14.7':
+    resolution: {integrity: sha512-11uSrj77IDijNBqizD4lY4y1laMyRrqMLSxjnWy5CvWkCjyRDW+gGmxYq0lwQKVas/sq7zyzYWXbL/BvBzR32g==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@tanstack/virtual-core@3.17.4':
-    resolution: {integrity: sha512-nGm5KteqxasUdThLc2izl6dHUqLv0LQj7Nuyo5gYalTPf/U8a9ermvsl7reT+6ioBW1l8WfpP/mcU338nLXpqw==}
+  '@tanstack/virtual-core@3.17.5':
+    resolution: {integrity: sha512-AXfBC3sq6PuYSwyxYORqqgHCNjPGAvKJvZuBBJ1klhztWBB5cgqgwsq8+fNfaQJG7/K4xYBja9S90QFn2zmQAg==}
 
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
@@ -4867,13 +4867,13 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 4.3.3
 
-  '@tanstack/react-virtual@3.14.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@tanstack/react-virtual@3.14.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@tanstack/virtual-core': 3.17.4
+      '@tanstack/virtual-core': 3.17.5
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@tanstack/virtual-core@3.17.4': {}
+  '@tanstack/virtual-core@3.17.5': {}
 
   '@testing-library/dom@10.4.0':
     dependencies:
